@@ -4,14 +4,28 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs12.x
+  environment:
+    tableName: ${self:custom.tableName}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:*
+      Resource: '*'
 
 functions:
   getUser:
-    handler: lambda/getUser.handler
+    handler: lambdas/endpoints/getUser.handler
     events:
       - http:
           method: GET
           path: get-user/{ID}
+          cors: true
+  getPlayerScore:
+    handler: lambdas/endpoints/getPlayerScore.handler
+    events:
+      - http:
+          method: GET
+          path: get-player-score/{ID}
           cors: true
 
 plugins:
