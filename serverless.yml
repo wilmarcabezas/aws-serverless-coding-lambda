@@ -6,10 +6,12 @@ provider:
   runtime: nodejs12.x
   environment:
     tableName: ${self:custom.tableName}
+    bucketName: ${self:custom.bucketName}
   iamRoleStatements:
     - Effect: Allow
       Action:
         - dynamodb:*
+        - s3:*
       Resource: '*'
 
 functions:
@@ -27,6 +29,27 @@ functions:
           method: GET
           path: get-player-score/{ID}
           cors: true
+  createPlayerScore:
+    handler: lambdas/endpoints/createPlayerScore.handler
+    events:
+      - http:
+          path: create-player-score/{ID}
+          method: POST
+          cors: true
+  createFile:
+    handler: lambdas/endpoints/createFile.handler
+    events:
+      - http:
+          path: create-file/{fileName}
+          method: POST
+          cors: true
+  getFile:
+    handler: lambdas/endpoints/getFile.handler
+    events:
+      - http:
+          path: get-file/{fileName}
+          method: GET
+          cors: true
 
 plugins:
   - serverless-s3-sync
@@ -37,6 +60,7 @@ package:
 
 custom:
   tableName: player-points
+  bucketName: s3uploaddemobucket-uploadwilmarux
   s3Sync:
     - bucketName: s3uploaddemobucket-uploadwilmarux
       localDir: uploadData
