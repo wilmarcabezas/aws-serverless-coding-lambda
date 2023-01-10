@@ -1,0 +1,34 @@
+service: coding-lambda-serverless
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+
+functions:
+  getUser:
+    handler: lambda/getUser.handler
+    events:
+      - http:
+          method: GET
+          path: get-user/{ID}
+          cors: true
+
+plugins:
+  - serverless-s3-sync
+  - serverless-webpack
+
+package:
+  individually: true
+
+custom:
+  s3Sync:
+    - bucketName: s3uploaddemobucket-wilmarux
+      localDir: uploadData
+
+resources:
+  Resources:
+    DemoBucketUpload:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: s3uploaddemobucket-wilmarux
