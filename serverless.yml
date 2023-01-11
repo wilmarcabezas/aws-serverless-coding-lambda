@@ -13,6 +13,7 @@ provider:
         - dynamodb:*
         - s3:*
       Resource: '*'
+  
 
 functions:
   getUser:
@@ -22,6 +23,7 @@ functions:
           method: GET
           path: get-user/{ID}
           cors: true
+          private: true
   getPlayerScore:
     handler: lambdas/endpoints/getPlayerScore.handler
     events:
@@ -54,11 +56,14 @@ functions:
 plugins:
   - serverless-s3-sync
   - serverless-webpack
+  - serverless-add-api-key
 
 package:
   individually: true
 
 custom:
+  apiKeys:
+    - MyFirstAPIKEY
   tableName: player-points
   bucketName: s3uploaddemobucket-uploadwilmarux
   s3Sync:
